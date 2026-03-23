@@ -31,7 +31,7 @@ test('post order with correct data should receive code 201', async ({ request })
     data: requestBody,
   })
   // parse raw response body to json
-  const responseBody = await response.json()
+  const responseBody = await response.json() //"age:20,title:'123'"
   const statusCode = response.status()
 
   // Log the response status and body
