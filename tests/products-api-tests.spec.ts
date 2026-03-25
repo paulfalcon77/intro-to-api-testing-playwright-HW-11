@@ -2,9 +2,9 @@ import { expect, test } from '@playwright/test'
 
 import { StatusCodes } from 'http-status-codes'
 
-test.describe("Lesson 11 -> Product API tests", () => {
-  const BaseEndpointURL = 'https://backend.tallinn-learning.ee/products';
-  const AUTH = {'X-API-Key': 'my-secret-api-key'};
+test.describe('Lesson 11 -> Product API tests', () => {
+  const BaseEndpointURL = 'https://backend.tallinn-learning.ee/products'
+  const AUTH = { 'X-API-Key': 'my-secret-api-key' }
   type Product = {
     id: number
     name: string
@@ -14,53 +14,53 @@ test.describe("Lesson 11 -> Product API tests", () => {
 
   test('GET /products - check API returns array with length >= 1', async ({ request }) => {
     const response = await request.get(BaseEndpointURL, {
-      headers: AUTH
-    });
+      headers: AUTH,
+    })
 
-    const responseBody: Product[] = await response.json();
-    expect(response.status()).toBe(StatusCodes.OK);
-    expect(responseBody.length).toBeDefined();
-    expect(responseBody.length).toBeGreaterThanOrEqual(1);
-  });
+    const responseBody: Product[] = await response.json()
+    expect(response.status()).toBe(StatusCodes.OK)
+    expect(responseBody.length).toBeDefined()
+    expect(responseBody.length).toBeGreaterThanOrEqual(1)
+  })
 
-  test('POST /products; GET /products/{id} - check product creation and product search by id', async ({ request }) => {
+  test('POST /products; GET /products/{id} - check product creation and product search by id', async ({
+    request,
+  }) => {
     const testProduct: Product = {
       id: 0,
       name: 'test lesson 11',
       price: 124523643,
-      createdAt: '2026-03-23T18:04:11.285Z'
+      createdAt: '2026-03-23T18:04:11.285Z',
     }
 
     const createResponse = await request.post(BaseEndpointURL, {
       headers: AUTH,
-      data: testProduct
-    });
-
-    const createResponseBody: Product = await createResponse.json();
-    expect(createResponseBody.id).toBeGreaterThan(0);
-    expect(createResponseBody.name).toBe(testProduct.name);
-    expect(createResponseBody.price).toBe(testProduct.price);
-    expect(createResponseBody.createdAt).toBeDefined();
-
-    const searchResponse = await request.get(`${BaseEndpointURL}/${createResponseBody.id}`, {
-      headers: AUTH
-    });
-    const searchResponseBody: Product = await searchResponse.json();
-    expect(searchResponse.status()).toBe(StatusCodes.OK);
-    expect.soft(searchResponseBody.id).toBe(createResponseBody.id);
-    expect.soft(searchResponseBody.name).toBe(testProduct.name);
-    expect.soft(searchResponseBody.price).toBe(testProduct.price);
-    expect.soft(searchResponseBody.createdAt).toBeDefined();
-  })
-
-  test('DELETE /products - check not existing product deletion', async ({
-    request,
-  }) => {
-    const deleteResponse = await request.delete(`${BaseEndpointURL}/-1`, {
-      headers: AUTH
+      data: testProduct,
     })
 
-    expect(deleteResponse.status()).toBe(400);
+    const createResponseBody: Product = await createResponse.json()
+    expect(createResponseBody.id).toBeGreaterThan(0)
+    expect(createResponseBody.name).toBe(testProduct.name)
+    expect(createResponseBody.price).toBe(testProduct.price)
+    expect(createResponseBody.createdAt).toBeDefined()
+
+    const searchResponse = await request.get(`${BaseEndpointURL}/${createResponseBody.id}`, {
+      headers: AUTH,
+    })
+    const searchResponseBody: Product = await searchResponse.json()
+    expect(searchResponse.status()).toBe(StatusCodes.OK)
+    expect.soft(searchResponseBody.id).toBe(createResponseBody.id)
+    expect.soft(searchResponseBody.name).toBe(testProduct.name)
+    expect.soft(searchResponseBody.price).toBe(testProduct.price)
+    expect.soft(searchResponseBody.createdAt).toBeDefined()
+  })
+
+  test('DELETE /products - check not existing product deletion', async ({ request }) => {
+    const deleteResponse = await request.delete(`${BaseEndpointURL}/-1`, {
+      headers: AUTH,
+    })
+
+    expect(deleteResponse.status()).toBe(400)
   })
 
   test('DELETE /products - check product deletion', async ({ request }) => {
@@ -74,14 +74,67 @@ test.describe("Lesson 11 -> Product API tests", () => {
     const createResponse = await request.post(BaseEndpointURL, {
       headers: AUTH,
       data: testProduct,
-    });
-    const createResponseBody: Product = await createResponse.json();
+    })
+    const createResponseBody: Product = await createResponse.json()
 
     const deleteResponse = await request.delete(`${BaseEndpointURL}/${createResponseBody.id}`, {
       headers: AUTH,
-    });
+    })
 
     expect(deleteResponse.status()).toBe(204)
+
+    const checkDeletedResponse = await request.get(`${BaseEndpointURL}/${createResponseBody.id}`, {
+      headers: AUTH,
+    })
+    expect(checkDeletedResponse.status()).toBe(StatusCodes.BAD_REQUEST)
   })
-})
+  test('Put /products/{id} - check update product by id', async ({ request}) => {
+    const testProduct: Product = {
+      id: 0,
+      name: ' test lesson 11 for update',
+      price: 987654321,
+      createdAt: '2026-03-23T18:04:11.285Z',
+    }
+    const createProductResponse = await request.post(BaseEndpointURL, {
+      headers: AUTH,
+      data: testProduct,
+    })
+    expect(createProductResponse.status()).toBe(StatusCodes.OK)
+
+    const createProductResponseBody: Product = await createProductResponse.json()
+    console.log(createProductResponseBody)
+
+    const newId = createProductResponseBody.id
+
+    const updateProduct: Product = {
+      id: newId,
+      name: 'lesson 11 is updated',
+      price: 98756,
+      createdAt: '2026-03-23T18:04:11.285Z',
+    }
+
+    const updateResponse = await request.put(`${BaseEndpointURL}/${updateProduct.id}`, {
+    headers: AUTH,
+    data: updateProduct,
+    })
+    expect(updateResponse.status()).toBe(StatusCodes.OK)
+
+    const updateResponseBody: Product = await updateResponse.json()
+    console.log(updateResponseBody)
+
+    expect.soft(updateResponseBody.name).toBe(updateProduct.name)
+    expect.soft(updateResponseBody.price).toBe(updateProduct.price)
+    expect.soft(updateResponseBody.id).toBe(newId)
+
+    const searchResponse = await request.get(`${BaseEndpointURL}/${updateResponseBody.id}`, {
+      headers: AUTH,
+    })
+    const searchResponseBody: Product = await searchResponse.json()
+    expect.soft(searchResponse.status()).toBe(StatusCodes.OK)
+    expect.soft(searchResponseBody.id).toBe(updateResponseBody.id)
+    expect.soft(searchResponseBody.name).toBe(updateProduct.name)
+  })
+
+  })
+
 
