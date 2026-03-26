@@ -5,7 +5,7 @@ export interface IProduct {
   createdAt: string | null
 }
 
-export  class Product {
+export class Product {
   id: number
   name: string
   price: number
@@ -18,11 +18,11 @@ export  class Product {
     this.createdAt = data.createdAt
   }
   static createNewArray(data: IProduct[]): Product[] {
-
     const result: Product[] = []
     for (let i: number = 0; i < data.length; i++) {
       const product = new Product(data[i])
       result.push(product)
-    } return result
+    }
+    return result
   }
 }
