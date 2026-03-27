@@ -21,7 +21,7 @@ test.describe('Lesson 11 -> Product API tests', () => {
   test('POST /products; GET /products/{id} - check product creation and product search by id', async ({
     request,
   }) => {
- const testProduct = Product.generateDefault()
+    const testProduct = Product.generateDefault()
 
     const createResponse = await request.post(BaseEndpointURL, {
       headers: AUTH,
@@ -55,8 +55,7 @@ test.describe('Lesson 11 -> Product API tests', () => {
   })
 
   test('DELETE /products - check product deletion', async ({ request }) => {
-    const testProduct = Product.generateCustom("fabric test", 1000)
-
+    const testProduct = Product.generateCustom('fabric test', 1000)
 
     const createResponse = await request.post(BaseEndpointURL, {
       headers: AUTH,

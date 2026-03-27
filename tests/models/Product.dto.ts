@@ -1,5 +1,3 @@
-
-
 export interface IProduct {
   id: number
   name: string
@@ -28,7 +26,7 @@ export class Product {
     return result
   }
 
-  static  generateDefault(): Product{
+  static generateDefault(): Product {
     return new Product({
       id: 0,
       name: 'test lesson 11',
@@ -37,7 +35,7 @@ export class Product {
     })
   }
 
-  static  generateCustom(name: string, price: number): Product{
+  static generateCustom(name: string, price: number): Product {
     return new Product({
       id: 0,
       name,
