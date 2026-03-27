@@ -1,3 +1,5 @@
+
+
 export interface IProduct {
   id: number
   name: string
@@ -24,5 +26,23 @@ export class Product {
       result.push(product)
     }
     return result
+  }
+
+  static  generateDefault(): Product{
+    return new Product({
+      id: 0,
+      name: 'test lesson 11',
+      price: 124523643,
+      createdAt: new Date().toISOString(),
+    })
+  }
+
+  static  generateCustom(name: string, price: number): Product{
+    return new Product({
+      id: 0,
+      name,
+      price,
+      createdAt: new Date().toISOString(),
+    })
   }
 }
