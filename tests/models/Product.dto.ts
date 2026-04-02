@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export interface IProduct {
   id: number
   name: string
@@ -44,3 +46,14 @@ export class Product {
     })
   }
 }
+
+export const ProductSchema = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    price: z.number(),
+    createdAt: z.string().nullable(),
+  })
+  .strict()
+
+export type ProductType = z.infer<typeof ProductSchema>
