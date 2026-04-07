@@ -12,4 +12,7 @@ export class UserDTO {
   static generateCourier(): UserDTO {
     return new UserDTO('Pavel', 'pavel', 'name')
   }
+  static generateCourierSecond(): UserDTO {
+    return new UserDTO('Ivan', 'ivanov', 'courier2')
+  }
 }
