@@ -41,4 +41,3 @@ export async function createOrder(request: APIRequestContext, token: string): Pr
 
   return responseBody.id
 }
-

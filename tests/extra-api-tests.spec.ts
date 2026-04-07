@@ -4,7 +4,6 @@ import { OrderDTO } from './models/OrderDTO'
 import { getJwt } from './helpers/api-helpers'
 import { UserDTO } from './models/LoginDTOcourier'
 
-
 const ORDERS_URL = 'https://backend.tallinn-learning.ee/orders'
 
 test('Full process: Create courier, Order and Deliver', async ({ request }) => {
@@ -45,23 +44,22 @@ test('Full process: Create courier, Order and Deliver', async ({ request }) => {
   const finalRes = await request.put(`${ORDERS_URL}/${order.id}/status`, {
     headers: {
       Authorization: `Bearer ${tokenCourier}`,
-
     },
     data: { status: 'DELIVERED' },
   })
   const finalResBody = finalRes.json()
-  console.log('response body:', await  finalResBody)
+  console.log('response body:', await finalResBody)
   expect(finalRes.status()).toBe(200)
 })
 
 test('DELETE order and check deleted order', async ({ request }) => {
-  const token = await getJwt(request);
+  const token = await getJwt(request)
   const response = await request.post(ORDERS_URL, {
     headers: { Authorization: `Bearer ${token}` },
     data: OrderDTO.generateDefault(),
   })
   const responseBody = await response.json()
-  console.log('response body:', await  responseBody)
+  console.log('response body:', await responseBody)
 
   const delResponse = await request.delete(`${ORDERS_URL}/${responseBody.id}`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -72,9 +70,8 @@ test('DELETE order and check deleted order', async ({ request }) => {
 
   const delResponseCheck = await request.get(`${ORDERS_URL}/${responseBody.id}`, {
     headers: { Authorization: `Bearer ${token}` },
-
   })
   expect(delResponseCheck.status()).toBe(StatusCodes.OK)
   const checkBody = await delResponseCheck.text()
   console.log('Check body:', checkBody)
-});
+})

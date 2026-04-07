@@ -1,6 +1,3 @@
-
-
-
 export class UserDTO {
   login: string
   password: string
@@ -12,6 +9,7 @@ export class UserDTO {
     this.name = name
   }
 
-  static generateCourier():UserDTO {
-  return new UserDTO("Pavel", "pavel", "name")}
+  static generateCourier(): UserDTO {
+    return new UserDTO('Pavel', 'pavel', 'name')
+  }
 }
